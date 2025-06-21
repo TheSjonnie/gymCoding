@@ -86,4 +86,3 @@ export function tokenizer(src: string): Token[] {
     tokens.push({type: TokenType.EndOfFile, value: "EndOfFile"})
     return tokens;
 }
-console.log(tokenizer("let x = 4 * ( 4 / 3)"))
