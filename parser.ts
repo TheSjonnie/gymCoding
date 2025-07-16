@@ -15,8 +15,14 @@ export default class Parser {
             body: []
         }
         while (this.notEOF()){
-
+            program.body.push(this.parse_statement())
         }
         return program
+    }
+    private parse_statement(): Statement {
+        return this.parse_expression()
+    }
+    private parse_expression(): Expression{
+        
     }
 }
