@@ -1,15 +1,17 @@
 export enum TokenType {
+    Null,
     Number,
     Identifier,
     Equals,
     OpenParen,
     CloseParen,
-    BinartOperator,
+    BinaryOperator,
     let,
     EndOfFile,
 }
 const keywords: Record<string, TokenType> = {
     'let': TokenType.let,
+    null: TokenType.Null
 }
 export interface Token {
     value: string;
@@ -47,7 +49,8 @@ export function tokenizer(src: string): Token[] {
             case "-":
             case "*":
             case "/":
-                tokens.push(token(srcArray.shift() as string, TokenType.BinartOperator));
+            case "%":
+                tokens.push(token(srcArray.shift() as string, TokenType.BinaryOperator));
                 break;
             case "=":
                 tokens.push(token(srcArray.shift() as string, TokenType.Equals));
@@ -69,7 +72,7 @@ export function tokenizer(src: string): Token[] {
                     }
                     // check for keywords
                     const reserved = keywords[word]
-                    if (reserved == undefined){
+                    if (typeof reserved == "number"){
                         tokens.push(token(word, TokenType.Identifier));
                     }  else{
                         tokens.push(token(word, reserved))

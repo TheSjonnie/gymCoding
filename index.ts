@@ -15,7 +15,7 @@ function startInterpreter() {
             process.exit();
         }
         const program = parser.produceAST(input);
-        console.log(program);
+        console.dir(program,{depth: null});
     });
 }
 

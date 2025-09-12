@@ -20,6 +20,14 @@ export default class Parser {
         const tk = this.tokens.shift() as Token;
         return tk;
     }
+    private expect(type: TokenType, err: any){
+        const previus = this.tokens.shift() as Token;
+        if (!previus || previus.type == type){
+            console.error("Parser Error: \n", err, previus, "- expecting: ", type)
+            process.exit()
+        }
+        return previus;
+    }
     public produceAST(srcCode: string): Program {
         this.tokens = tokenizer(srcCode);
         const program: Program = {
@@ -35,9 +43,35 @@ export default class Parser {
         return this.parseExpression();
     }
     private parseExpression(): Expression {
-        return this.parsePrimaryExpression();
+        return this.parseAddExpression();
     }
-    private parsePrimaryExpression() {
+    private parseAddExpression(): Expression {
+        // method dat bij 10 -+ 5 de rechter kant pakt en de linkerkant met de operator
+        let left = this.parseMultiExpression();
+        while (this.currentToken().value == "+" || this.currentToken().value == "-"){
+            const operator = this.eat().value;
+            const right = this.parseMultiExpression();
+            left = {
+                kind: "BinaryExpression",
+                left,right,operator,
+            } as BinaryExpression
+        }
+        return left
+    }
+        private parseMultiExpression(): Expression {
+            // method dat bij 10 */ 5 de rechter kant pakt en de linkerkant met de operator
+        let left = this.parsePrimaryExpression();
+        while (this.currentToken().value == "/" || this.currentToken().value == "*" || this.currentToken().value == "%"){
+            const operator = this.eat().value;
+            const right = this.parsePrimaryExpression();
+            left = {
+                kind: "BinaryExpression",
+                left,right,operator,
+            } as BinaryExpression
+        }
+        return left
+    }
+    private parsePrimaryExpression(): Expression {
         const tk = this.currentToken().type;
         switch (tk) {
             case TokenType.Identifier:
@@ -50,6 +84,11 @@ export default class Parser {
                     kind: "NumericLiteral",
                     value: parseFloat(this.eat().value)
                 } as NumericLiteral;
+            case TokenType.OpenParen:
+                this.eat(); // eat the opening parem
+                const value = this.parseExpression();
+                this.eat(TokenType.CloseParen, "Unexpected toekn found inside parn expression expected closing paren"); // eat the closing parem
+                return value;
             default:
                 console.error("unexprected token found during parsing! ", this.currentToken());
                 process.exit()
