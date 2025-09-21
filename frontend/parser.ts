@@ -3,8 +3,9 @@ import {
     Program,
     Expression,
     BinaryExpression,
-    NumericLiteral,
+    NumbericLiteral,
     Identifier,
+    NullLiteral,
 } from "./ast";
 import { tokenizer, Token, TokenType } from "./lexer";
 
@@ -22,7 +23,7 @@ export default class Parser {
     }
     private expect(type: TokenType, err: any){
         const previus = this.tokens.shift() as Token;
-        if (!previus || previus.type == type){
+        if (!previus || previus.type != type){
             console.error("Parser Error: \n", err, previus, "- expecting: ", type)
             process.exit()
         }
@@ -79,15 +80,18 @@ export default class Parser {
                     kind: "Identifier",
                     symbol: this.eat().value,
                 } as Identifier;
+            case TokenType.Null:
+                this.eat()
+                return { kind: "NullLiteral", value: "null"}  as NullLiteral
             case TokenType.Number:
                 return {
-                    kind: "NumericLiteral",
+                    kind: "NumbericLiteral",
                     value: parseFloat(this.eat().value)
-                } as NumericLiteral;
+                } as NumbericLiteral;
             case TokenType.OpenParen:
                 this.eat(); // eat the opening parem
                 const value = this.parseExpression();
-                this.eat(TokenType.CloseParen, "Unexpected toekn found inside parn expression expected closing paren"); // eat the closing parem
+                this.expect(TokenType.CloseParen, "Unexpected toekn found inside parn expression expected closing paren"); // eat the closing parem
                 return value;
             default:
                 console.error("unexprected token found during parsing! ", this.currentToken());

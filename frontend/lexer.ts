@@ -73,9 +73,9 @@ export function tokenizer(src: string): Token[] {
                     // check for keywords
                     const reserved = keywords[word]
                     if (typeof reserved == "number"){
-                        tokens.push(token(word, TokenType.Identifier));
-                    }  else{
                         tokens.push(token(word, reserved))
+                    }  else{
+                        tokens.push(token(word, TokenType.Identifier));
                     }
                 } else if (checkSkippable(srcArray[0])){
                     srcArray.shift(); // removes the skippable tokens

@@ -1,6 +1,6 @@
 const readline = require("readline");
 import Parser from "./frontend/parser";
-
+import { evaluate } from "./runtime/interpreter";
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -16,6 +16,8 @@ function startInterpreter() {
         }
         const program = parser.produceAST(input);
         console.dir(program,{depth: null});
+        const results = evaluate(program);
+        console.log(results)
     });
 }
 
