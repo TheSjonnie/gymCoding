@@ -40,7 +40,16 @@ export default class Parser {
         return program;
     }
     private parseStatement(): Statement {
-        return this.parseExpression();
+        switch(this.currentToken().type){
+            case TokenType.let:
+            case TokenType.const:
+                return this.parseVariableDeclaration();
+            default: 
+                return this.parseExpression()
+        }
+    }
+    private parseVariableDeclaration(){
+        
     }
     private parseExpression(): Expression {
         return this.parseAddExpression();

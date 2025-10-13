@@ -6,6 +6,7 @@ export enum TokenType {
     CloseParen,
     BinaryOperator,
     let,
+    const,
     EndOfFile,
 }
 const keywords: Record<string, TokenType> = {
