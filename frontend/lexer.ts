@@ -2,6 +2,7 @@ export enum TokenType {
     Number,
     Identifier,
     Equals,
+    Semicolin,
     OpenParen,
     CloseParen,
     BinaryOperator,
@@ -10,8 +11,9 @@ export enum TokenType {
     EndOfFile,
 }
 const keywords: Record<string, TokenType> = {
-    'let': TokenType.let,
-}
+    let: TokenType.let,
+    const: TokenType.const,
+};
 export interface Token {
     value: string;
     type: TokenType;
@@ -29,8 +31,8 @@ function checkNumber(src: string) {
     const charCodes09 = ["0".charCodeAt(0), "9".charCodeAt(0)];
     return charCodeSrc >= charCodes09[0] && charCodeSrc <= charCodes09[1];
 }
-function checkSkippable (src: string){
-    return src == ' ' || src == '\n' || src == '\t'
+function checkSkippable(src: string) {
+    return src == " " || src == "\n" || src == "\t";
 }
 export function tokenizer(src: string): Token[] {
     const tokens = new Array<Token>();
@@ -54,6 +56,9 @@ export function tokenizer(src: string): Token[] {
             case "=":
                 tokens.push(token(srcArray.shift() as string, TokenType.Equals));
                 break;
+            case ";":
+                tokens.push(token(srcArray.shift() as string, TokenType.Semicolin));
+                break;
             default:
                 // use for multycharchar tokens like <=, let, a varname
                 if (checkNumber(srcArray[0])) {
@@ -70,21 +75,21 @@ export function tokenizer(src: string): Token[] {
                         word += srcArray.shift();
                     }
                     // check for keywords
-                    const reserved = keywords[word]
-                    if (typeof reserved == "number"){
-                        tokens.push(token(word, reserved))
-                    }  else{
+                    const reserved = keywords[word];
+                    if (typeof reserved == "number") {
+                        tokens.push(token(word, reserved));
+                    } else {
                         tokens.push(token(word, TokenType.Identifier));
                     }
-                } else if (checkSkippable(srcArray[0])){
+                } else if (checkSkippable(srcArray[0])) {
                     srcArray.shift(); // removes the skippable tokens
                 } else {
                     console.log("Unknown character found in src: ", srcArray[0]);
-                    process.exit()
+                    process.exit();
                 }
                 break;
         }
     }
-    tokens.push({type: TokenType.EndOfFile, value: "EndOfFile"})
+    tokens.push({ type: TokenType.EndOfFile, value: "EndOfFile" });
     return tokens;
 }

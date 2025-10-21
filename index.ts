@@ -23,9 +23,9 @@ env.declareVarible("null", make_Null())
             process.exit();
         }
         const program = parser.produceAST(input);
-        console.dir(program,{depth: null});
+        // console.dir(program,{depth: null});
         const results = evaluate(program, env);
-        console.log(results)
+        console.log(results, "line 28 index.ts" )
     });
 }
 

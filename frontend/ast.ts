@@ -13,13 +13,13 @@ export interface Statement {
     kind: NodeType;
 }
 
-export interface variableDeclaration extends Statement {
-    kind: "variableDeclaration";
+export interface Program extends Statement {
+    kind: "Program";
     body: Statement[];
 }
 
-export interface Program extends Statement {
-    kind: "Program";
+export interface variableDeclaration extends Statement {
+    kind: "variableDeclaration";
     constant: boolean;
     identifier: string;
     value?: Expression;

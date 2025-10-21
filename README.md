@@ -10,7 +10,7 @@ Let op: dit is een hobby-/leerproject. Veel onderdelen zijn nog in ontwikkeling.
 - Een minimale interpreter schrijven in TypeScript
 - Inzicht krijgen in runtime-waarden en scopebeheer
 
-## Status (hoog niveau)
+## Status
 
 - Basis lexer & parser: in ontwikkeling
 - Variabelen en basistypen: in ontwikkeling

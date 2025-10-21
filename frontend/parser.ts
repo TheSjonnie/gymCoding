@@ -5,6 +5,7 @@ import {
     BinaryExpression,
     NumbericLiteral,
     Identifier,
+    variableDeclaration,
 } from "./ast";
 import { tokenizer, Token, TokenType } from "./lexer";
 
@@ -48,8 +49,23 @@ export default class Parser {
                 return this.parseExpression()
         }
     }
-    private parseVariableDeclaration(){
-        
+
+
+    private parseVariableDeclaration(): Statement{
+        // throw new Error("Method not implemented")
+        const isConstant = this.eat().type == TokenType.const;
+        const identifier = this.expect(TokenType.Identifier, "expected indentifier name following let | const keywords.",).value;
+        if(this.currentToken().type == TokenType.Semicolin){
+            this.eat();
+            if (isConstant){
+                throw "must assigne value to constant expression. no value provided";
+            }
+            return { kind: "variableDeclaration", identifier, constant: false} as variableDeclaration
+        }
+        this.expect(TokenType.Equals, "expected equals toekn following indentifier in var declaration.");
+        const declaration = { kind: "variableDeclaration", value: this.parseExpression(), constant: isConstant } as variableDeclaration
+        this.expect(TokenType.Semicolin, "valiable declaration statment must end with semicolon.")
+        return declaration;
     }
     private parseExpression(): Expression {
         return this.parseAddExpression();
