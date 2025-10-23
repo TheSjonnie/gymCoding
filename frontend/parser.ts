@@ -6,6 +6,7 @@ import {
     NumbericLiteral,
     Identifier,
     variableDeclaration,
+    AssignmentExpression,
 } from "./ast";
 import { tokenizer, Token, TokenType } from "./lexer";
 
@@ -81,7 +82,18 @@ export default class Parser {
         return declaration;
     }
     private parseExpression(): Expression {
-        return this.parseAddExpression();
+        return this.parseAssignmentExpression()
+
+    }
+    parseAssignmentExpression(): Expression{
+                const left = this.parseAddExpression();
+        if (this.currentToken().type == TokenType.Equals){
+            this.eat();
+            const value = this.parseAssignmentExpression()
+            return { value, assigne: left, kind: "AssignmentExpression"} as AssignmentExpression;
+        }
+        return left;
+
     }
     private parseAddExpression(): Expression {
         // method dat bij 10 -+ 5 de rechter kant pakt en de linkerkant met de operator

@@ -11,7 +11,7 @@ export function evaluate_program(program: Program, env: Environment): RuntimeVal
     }
     return lastEvalutad;
 }
-export function eval_variable_declaration(
+export function evaluate_variable_declaration(
   declaration: variableDeclaration,
   env: Environment,
 ): RuntimeVal {
