@@ -21,11 +21,11 @@ export default class Parser {
         const tk = this.tokens.shift() as Token;
         return tk;
     }
-    private expect(type: TokenType, err: any){
+    private expect(type: TokenType, err: any) {
         const previus = this.tokens.shift() as Token;
-        if (!previus || previus.type != type){
-            console.error("Parser Error: \n", err, previus, "- expecting: ", type)
-            process.exit()
+        if (!previus || previus.type != type) {
+            console.error("Parser Error: \n", err, previus, "- expecting: ", type);
+            process.exit();
         }
         return previus;
     }
@@ -41,30 +41,43 @@ export default class Parser {
         return program;
     }
     private parseStatement(): Statement {
-        switch(this.currentToken().type){
+        switch (this.currentToken().type) {
             case TokenType.let:
             case TokenType.const:
                 return this.parseVariableDeclaration();
-            default: 
-                return this.parseExpression()
+            default:
+                return this.parseExpression();
         }
     }
 
-
-    private parseVariableDeclaration(): Statement{
-        // throw new Error("Method not implemented")
+    private parseVariableDeclaration(): Statement {
         const isConstant = this.eat().type == TokenType.const;
-        const identifier = this.expect(TokenType.Identifier, "expected indentifier name following let | const keywords.",).value;
-        if(this.currentToken().type == TokenType.Semicolin){
+        const identifier = this.expect(
+            TokenType.Identifier,
+            "expected indentifier name following let | const keywords."
+        ).value;
+        if (this.currentToken().type == TokenType.Semicolin) {
             this.eat();
-            if (isConstant){
+            if (isConstant) {
                 throw "must assigne value to constant expression. no value provided";
             }
-            return { kind: "variableDeclaration", identifier, constant: false} as variableDeclaration
+            return {
+                kind: "variableDeclaration",
+                identifier,
+                constant: false,
+            } as variableDeclaration;
         }
-        this.expect(TokenType.Equals, "expected equals toekn following indentifier in var declaration.");
-        const declaration = { kind: "variableDeclaration", value: this.parseExpression(), constant: isConstant } as variableDeclaration
-        this.expect(TokenType.Semicolin, "valiable declaration statment must end with semicolon.")
+        this.expect(
+            TokenType.Equals,
+            "expected equals toekn following indentifier in var declaration."
+        );
+        const declaration = {
+            kind: "variableDeclaration",
+            value: this.parseExpression(),
+            identifier,
+            constant: isConstant,
+        } as variableDeclaration;
+        this.expect(TokenType.Semicolin, "valiable declaration statment must end with semicolon.");
         return declaration;
     }
     private parseExpression(): Expression {
@@ -73,28 +86,36 @@ export default class Parser {
     private parseAddExpression(): Expression {
         // method dat bij 10 -+ 5 de rechter kant pakt en de linkerkant met de operator
         let left = this.parseMultiExpression();
-        while (this.currentToken().value == "+" || this.currentToken().value == "-"){
+        while (this.currentToken().value == "+" || this.currentToken().value == "-") {
             const operator = this.eat().value;
             const right = this.parseMultiExpression();
             left = {
                 kind: "BinaryExpression",
-                left,right,operator,
-            } as BinaryExpression
+                left,
+                right,
+                operator,
+            } as BinaryExpression;
         }
-        return left
+        return left;
     }
-        private parseMultiExpression(): Expression {
-            // method dat bij 10 */ 5 de rechter kant pakt en de linkerkant met de operator
+    private parseMultiExpression(): Expression {
+        // method dat bij 10 */ 5 de rechter kant pakt en de linkerkant met de operator
         let left = this.parsePrimaryExpression();
-        while (this.currentToken().value == "/" || this.currentToken().value == "*" || this.currentToken().value == "%"){
+        while (
+            this.currentToken().value == "/" ||
+            this.currentToken().value == "*" ||
+            this.currentToken().value == "%"
+        ) {
             const operator = this.eat().value;
             const right = this.parsePrimaryExpression();
             left = {
                 kind: "BinaryExpression",
-                left,right,operator,
-            } as BinaryExpression
+                left,
+                right,
+                operator,
+            } as BinaryExpression;
         }
-        return left
+        return left;
     }
     private parsePrimaryExpression(): Expression {
         const tk = this.currentToken().type;
@@ -107,16 +128,19 @@ export default class Parser {
             case TokenType.Number:
                 return {
                     kind: "NumbericLiteral",
-                    value: parseFloat(this.eat().value)
+                    value: parseFloat(this.eat().value),
                 } as NumbericLiteral;
             case TokenType.OpenParen:
                 this.eat(); // eat the opening parem
                 const value = this.parseExpression();
-                this.expect(TokenType.CloseParen, "Unexpected toekn found inside parn expression expected closing paren"); // eat the closing parem
+                this.expect(
+                    TokenType.CloseParen,
+                    "Unexpected toekn found inside parn expression expected closing paren"
+                ); // eat the closing parem
                 return value;
             default:
                 console.error("unexprected token found during parsing! ", this.currentToken());
-                process.exit()
+                process.exit();
         }
     }
 }

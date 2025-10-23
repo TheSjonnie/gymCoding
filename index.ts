@@ -1,4 +1,5 @@
 const readline = require("readline");
+import { parse } from "path";
 import Parser from "./frontend/parser";
 import Environment from "./runtime/environment";
 import { evaluate } from "./runtime/interpreter";
@@ -17,16 +18,19 @@ function startInterpreter() {
 env.declareVarible("false", make_Bool(false))
 env.declareVarible("null", make_Null())
     console.log("Interpreter started");
-    rl.question("Enter Code for interpreter> ", (input) => {
+    readlineFn(parser, env)
+}
+function readlineFn(parser,env){
+    rl.question("Enter Code> ", (input) => {
         if (!input || input.includes("exit")) {
             rl.close();
             process.exit();
+            return;
         }
         const program = parser.produceAST(input);
-        // console.dir(program,{depth: null});
         const results = evaluate(program, env);
         console.log(results, "line 28 index.ts" )
+        readlineFn(parser, env)
     });
 }
-
 startInterpreter();
