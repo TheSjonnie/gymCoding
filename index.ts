@@ -13,9 +13,7 @@ function startInterpreter() {
     const parser = new Parser();
     const env = new Environment();
 
-    env.declareVarible("true", make_Bool(true), true)
-    env.declareVarible("false", make_Bool(false), true)
-    env.declareVarible("null", make_Null(), true)
+
     console.log("Interpreter started");
     readlineFn(parser, env)
 }

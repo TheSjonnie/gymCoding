@@ -1,5 +1,12 @@
-import { RuntimeVal } from "./values";
+import { make_Bool, make_Null, RuntimeVal } from "./values";
 
+// create default global vars
+function setupScope(env: Environment) {
+    
+        env.declareVarible("true", make_Bool(true), true)
+    env.declareVarible("false", make_Bool(false), true)
+    env.declareVarible("null", make_Null(), true)
+}
 export default class Environment {
 
     private parent?: Environment;
