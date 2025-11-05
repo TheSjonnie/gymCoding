@@ -13,9 +13,13 @@ export default class Environment {
     private varibles: Map<string, RuntimeVal>
     private constant: Set<string>;
     constructor(parentENV?: Environment){
+        const global = parentENV ? true : false;
         this.parent = parentENV;
         this.varibles = new Map();
         this.constant = new Set();
+        if (global ) {
+            setupScope(this)
+        }
     }
     public declareVarible (varname: string, value: RuntimeVal, constant: boolean): RuntimeVal{
         console.log(varname, "varname", value, "value")
