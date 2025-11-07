@@ -1,11 +1,12 @@
 import { make_Bool, make_Null, RuntimeVal } from "./values";
 
 // create default global vars
-function setupScope(env: Environment) {
-    
+export function createGlobalEnvironment() {
+    const env = new Environment();
         env.declareVarible("true", make_Bool(true), true)
     env.declareVarible("false", make_Bool(false), true)
     env.declareVarible("null", make_Null(), true)
+    return env;
 }
 export default class Environment {
 
@@ -17,9 +18,6 @@ export default class Environment {
         this.parent = parentENV;
         this.varibles = new Map();
         this.constant = new Set();
-        if (global ) {
-            setupScope(this)
-        }
     }
     public declareVarible (varname: string, value: RuntimeVal, constant: boolean): RuntimeVal{
         console.log(varname, "varname", value, "value")

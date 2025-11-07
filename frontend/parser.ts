@@ -7,6 +7,8 @@ import {
     Identifier,
     variableDeclaration,
     AssignmentExpression,
+    Property,
+    ObjectLiteral,
 } from "./ast";
 import { tokenizer, Token, TokenType } from "./lexer";
 
@@ -85,14 +87,46 @@ export default class Parser {
         return this.parseAssignmentExpression()
 
     }
-    parseAssignmentExpression(): Expression{
-                const left = this.parseAddExpression();
+    private parseAssignmentExpression(): Expression{
+                const left = this.parseObjectExpression();
         if (this.currentToken().type == TokenType.Equals){
             this.eat();
             const value = this.parseAssignmentExpression()
             return { value, assigne: left, kind: "AssignmentExpression"} as AssignmentExpression;
         }
         return left;
+
+    }
+    private parseObjectExpression(): Expression {
+        if (this.currentToken().type !== TokenType.OpenBrace) {
+            return this.parseAddExpression();
+        }
+        this.eat()
+        const properties = new Array<Property>();
+        while(this.notEOF() && this.currentToken().type != TokenType.CloseBrace) {
+             const key = this.expect(TokenType.Identifier, "object lital ekey expressetd").value
+
+             // { key, }
+             if (this.currentToken().type == TokenType.Comma){
+                this.eat();
+                properties.push({ key, kind: "Property", value: undefined } as Property);
+                continue;
+             }  // { key }
+             else if (this.currentToken().type == TokenType.CloseBrace){
+                properties.push({ key, kind: "Property", value: undefined } as Property);
+                continue;
+             }
+            // { key: value}
+            this.expect(TokenType.Colon, "missing colon following exdentifier in objectexpression")
+            const value = this.parseExpression();
+            properties.push({ kind: "Property", value, key})
+            if (this.currentToken().type != TokenType.CloseBrace){
+                this.expect(TokenType.Comma, "exprected comma or closingbrace.");
+            }
+        }
+        this.expect(TokenType.CloseBrace, "Object literal missing closing brace. ");
+
+        return { kind: "ObjectLiteral", properties} as ObjectLiteral;
 
     }
     private parseAddExpression(): Expression {

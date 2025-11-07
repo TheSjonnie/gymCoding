@@ -1,8 +1,8 @@
 import { json } from "stream/consumers";
-import { AssignmentExpression, BinaryExpression, Identifier } from "../../frontend/ast";
+import { AssignmentExpression, BinaryExpression, Identifier, ObjectLiteral } from "../../frontend/ast";
 import Environment from "../environment";
 import { evaluate } from "../interpreter";
-import { NumberVal, RuntimeVal, make_Null } from "../values";
+import { NumberVal, ObjectVal, RuntimeVal, make_Null } from "../values";
 
 export function evaluate_numeric_expression(
     leftHandSide: NumberVal,
@@ -65,4 +65,14 @@ export function evaluate_assignment (node: AssignmentExpression, env: Environmen
     const varname = (node.assigne as Identifier).symbol
     return env.assignVarible(varname, evaluate(node.value, env))
 
+}
+
+export function evaluate_object_expression (obj: ObjectLiteral, env: Environment): RuntimeVal {
+    const object = { type: "object", properties: new Map( ) } as ObjectVal
+    for (const{ key, value} of obj.properties){
+        const runtimeVal =  ( value == undefined) ? env.lookupVarible(key) : evaluate(value, env);
+        object.properties.set(key, runtimeVal);
+
+    }
+    return object
 }
