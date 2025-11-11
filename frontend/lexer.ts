@@ -7,7 +7,10 @@ export enum TokenType {
     CloseParen, // )
     OpenBrace, // {
     CloseBrace, // }
+    Openbraket, // ]
+    CloseBraket, // [
     Comma,
+    Dot,
     Colon, // :
     BinaryOperator,
     let,
@@ -45,49 +48,44 @@ export function tokenizer(src: string): Token[] {
     while (srcArray.length > 0) {
         switch (srcArray[0]) {
             case "(":
-                tokens.push(
-                    token(srcArray.shift() as string, TokenType.OpenParen)
-                );
+                tokens.push(token(srcArray.shift() as string, TokenType.OpenParen));
                 break;
             case ")":
-                tokens.push(
-                    token(srcArray.shift() as string, TokenType.CloseParen)
-                );
+                tokens.push(token(srcArray.shift() as string, TokenType.CloseParen));
                 break;
             case "{":
-                tokens.push(
-                    token(srcArray.shift() as string, TokenType.OpenBrace)
-                );
+                tokens.push(token(srcArray.shift() as string, TokenType.OpenBrace));
                 break;
             case "}":
-                tokens.push(
-                    token(srcArray.shift() as string, TokenType.CloseBrace)
-                );
+                tokens.push(token(srcArray.shift() as string, TokenType.CloseBrace));
+                break;
+            case "[":
+                tokens.push(token(srcArray.shift() as string, TokenType.Openbraket));
+                break;
+            case "]":
+                tokens.push(token(srcArray.shift() as string, TokenType.CloseBraket));
                 break;
             case "+":
             case "-":
             case "*":
             case "/":
             case "%":
-                tokens.push(
-                    token(srcArray.shift() as string, TokenType.BinaryOperator)
-                );
+                tokens.push(token(srcArray.shift() as string, TokenType.BinaryOperator));
                 break;
             case "=":
-                tokens.push(
-                    token(srcArray.shift() as string, TokenType.Equals)
-                );
+                tokens.push(token(srcArray.shift() as string, TokenType.Equals));
                 break;
             case ";":
-                tokens.push(
-                    token(srcArray.shift() as string, TokenType.Semicolin)
-                );
+                tokens.push(token(srcArray.shift() as string, TokenType.Semicolin));
                 break;
             case ":":
                 tokens.push(token(srcArray.shift() as string, TokenType.Colon));
                 break;
             case ",":
                 tokens.push(token(srcArray.shift() as string, TokenType.Comma));
+                break;
+                            case ".":
+                tokens.push(token(srcArray.shift() as string, TokenType.Dot));
                 break;
             default:
                 // use for multycharchar tokens like <=, let, a varname
@@ -114,11 +112,11 @@ export function tokenizer(src: string): Token[] {
                 } else if (checkSkippable(srcArray[0])) {
                     srcArray.shift(); // removes the skippable tokens
                 } else {
-        console.error(
-          "Unreconized character found in source: ",
-          srcArray[0].charCodeAt(0),
-            srcArray[0],
-        );
+                    console.error(
+                        "Unreconized character found in source: ",
+                        srcArray[0].charCodeAt(0),
+                        srcArray[0]
+                    );
                     process.exit();
                 }
                 break;

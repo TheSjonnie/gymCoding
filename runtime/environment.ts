@@ -1,11 +1,16 @@
-import { make_Bool, make_Null, RuntimeVal } from "./values";
+import { make_Bool, make_native_function, make_Null, RuntimeVal } from "./values";
 
 // create default global vars
 export function createGlobalEnvironment() {
     const env = new Environment();
-        env.declareVarible("true", make_Bool(true), true)
+    env.declareVarible("true", make_Bool(true), true)
     env.declareVarible("false", make_Bool(false), true)
     env.declareVarible("null", make_Null(), true)
+
+    env.declareVarible("print", make_native_function((args, scope) => {
+        console.log(...args);
+        return make_Null()
+    }) , true);
     return env;
 }
 export default class Environment {
@@ -20,7 +25,6 @@ export default class Environment {
         this.constant = new Set();
     }
     public declareVarible (varname: string, value: RuntimeVal, constant: boolean): RuntimeVal{
-        console.log(varname, "varname", value, "value")
         if (this.varibles.has(varname)){
             throw `cannot declare vaiable ${varname} as it already in use`;
         }

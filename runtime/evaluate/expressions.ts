@@ -1,8 +1,8 @@
 import { json } from "stream/consumers";
-import { AssignmentExpression, BinaryExpression, Identifier, ObjectLiteral } from "../../frontend/ast";
+import { AssignmentExpression, BinaryExpression, CallExpression, Identifier, ObjectLiteral } from "../../frontend/ast";
 import Environment from "../environment";
 import { evaluate } from "../interpreter";
-import { NumberVal, ObjectVal, RuntimeVal, make_Null } from "../values";
+import { NativeFunctionValue, NumberVal, ObjectVal, RuntimeVal, make_Null } from "../values";
 
 export function evaluate_numeric_expression(
     leftHandSide: NumberVal,
@@ -75,4 +75,14 @@ export function evaluate_object_expression (obj: ObjectLiteral, env: Environment
 
     }
     return object
+}
+
+export function evaluate_call_expression (expression: CallExpression, env: Environment): RuntimeVal {
+    const args = expression.arguments.map((arg) => evaluate(arg, env))
+    const fn = evaluate(expression.caller , env) ;
+    if (fn.type != "nativeFunction"){
+        throw "cannot call value that is not a function" + JSON.stringify(fn);
+    }
+    const results = (fn as NativeFunctionValue).call(args, env)
+    return results
 }

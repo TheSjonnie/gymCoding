@@ -16,7 +16,7 @@ function startInterpreter() {
     readFileFn(parser, env) // to run the test.txt file
 }
 function readFileFn(parser, env){
-    const data = fs.readFileSync("C:\\Users\\jesse\\Documents\\codeing\\ProgrammingLanguages\\gymCoding\\test.txt", 'utf-8')
+    const data = fs.readFileSync( `${__dirname}/test.txt`, 'utf-8')
     runProgram(parser, data,env)
 }
 function readlineFn(parser,env){
@@ -36,8 +36,9 @@ function readlineFn(parser,env){
 }
 function runProgram(parser, input, env){
     const program = parser.produceAST(input);
-    console.dir(program,{depth: null})
+    // console.log('results from parser', '\n')
+    // console.dir(program,{depth: null})
     const results = evaluate(program, env);
-    console.log(results, "line 28 index.ts")
+    console.log('results from evaluate', '\n' ,results)
 } 
 startInterpreter();
