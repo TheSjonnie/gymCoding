@@ -25,7 +25,6 @@ export interface NumberVal extends RuntimeVal {
     type: 'number';
     value: number;
 }
-
 export function make_Number(n = 0) {
     return { type: 'number', value: n} as NumberVal;
 }

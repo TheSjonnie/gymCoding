@@ -1,9 +1,0 @@
-function add(x, y) {
-    let results = x + y;
-    print(results)
-    results
-}
-
-const results = add(10, 4);
-
-print(results)
