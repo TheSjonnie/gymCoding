@@ -2,7 +2,7 @@ import { json } from "stream/consumers";
 import { AssignmentExpression, BinaryExpression, CallExpression, Identifier, ObjectLiteral } from "../../frontend/ast";
 import Environment from "../environment";
 import { evaluate } from "../interpreter";
-import { NativeFunctionValue, NumberVal, ObjectVal, RuntimeVal, make_Null } from "../values";
+import { FunctionValue, NativeFunctionValue, NumberVal, ObjectVal, RuntimeVal, make_Null } from "../values";
 
 export function evaluate_numeric_expression(
     leftHandSide: NumberVal,
@@ -80,9 +80,22 @@ export function evaluate_object_expression (obj: ObjectLiteral, env: Environment
 export function evaluate_call_expression (expression: CallExpression, env: Environment): RuntimeVal {
     const args = expression.arguments.map((arg) => evaluate(arg, env))
     const fn = evaluate(expression.caller , env) ;
-    if (fn.type != "nativeFunction"){
-        throw "cannot call value that is not a function" + JSON.stringify(fn);
+    if (fn.type == "nativeFunction"){
+        const results = (fn as NativeFunctionValue).call(args, env)
+        return results
+    } 
+    if(fn.type == 'function'){
+        const func = fn as FunctionValue;
+        const scope = new Environment(func.declarationEnv);
+        for(let i = 0; i < func.parameters.length; i++){
+            scope.declareVarible(func.parameters[i], args[i], false)
+        }
+
+        let result: RuntimeVal = make_Null();
+        for(const statement of func.body){
+            result = evaluate(statement, scope)
+        }   
+        return result
     }
-    const results = (fn as NativeFunctionValue).call(args, env)
-    return results
+    throw "cannot call value that is not a function" + JSON.stringify(fn);
 }

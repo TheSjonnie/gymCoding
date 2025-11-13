@@ -1,4 +1,9 @@
-let foo = 5 * 2;
-foo = foo / 4 + 5
+function add(x, y) {
+    let results = x + y;
+    print(results)
+    results
+}
 
-print(foo, 45)
+const results = add(10, 4);
+
+print(results)

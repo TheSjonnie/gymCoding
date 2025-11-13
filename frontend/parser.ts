@@ -12,6 +12,7 @@ import {
     ObjectLiteral,
     CallExpression,
     MemberExpression,
+    functionDeclaration,
 } from "./ast";
 import { tokenizer, Token, TokenType } from "./lexer";
 import { BlobOptions } from "buffer";
@@ -53,9 +54,37 @@ export default class Parser {
             case TokenType.let:
             case TokenType.const:
                 return this.parseVariableDeclaration();
+            case TokenType.Function:
+                return this.parseFunctionDeclaration()
             default:
                 return this.parseExpression();
         }
+    }
+    parseFunctionDeclaration(): Statement {
+
+        this.eat(); 
+        const name: string = this.expect(TokenType.Identifier, "expected function name following fn keyword").value;
+        const args = this.parseArguments()
+        const parameters: string[] = []
+        for(const arg of args){
+            if(arg.kind !== "Identifier"){
+                console.log(args)
+                throw "expected function declaration expected parameters to be of type string.";
+            }
+            parameters.push((arg as Identifier).symbol)
+        }
+        this.expect(TokenType.OpenBrace, "expected function body")
+        
+        const body: Statement[] = []
+        while(this.currentToken().type !== TokenType.EndOfFile 
+        && this.currentToken().type !== TokenType.CloseBrace){
+            body.push(this.parseStatement())
+        }
+        this.expect(TokenType.CloseBrace, "Closing brace expted inside function declaration");
+        const fn = {
+             kind: "functionDeclaration", name, parameters: parameters, body
+        } as functionDeclaration;
+        return fn
     }
 
     private parseVariableDeclaration(): Statement {

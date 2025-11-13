@@ -15,11 +15,13 @@ export enum TokenType {
     BinaryOperator,
     let,
     const,
+    Function,
     EndOfFile,
 }
 const keywords: Record<string, TokenType> = {
     let: TokenType.let,
     const: TokenType.const,
+    function: TokenType.Function,
 };
 export interface Token {
     value: string;

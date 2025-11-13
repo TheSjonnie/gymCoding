@@ -36,8 +36,8 @@ function readlineFn(parser,env){
 }
 function runProgram(parser, input, env){
     const program = parser.produceAST(input);
-    // console.log('results from parser', '\n')
-    // console.dir(program,{depth: null})
+    console.log('results from parser', '\n')
+    console.dir(program,{depth: null})
     const results = evaluate(program, env);
     console.log('results from evaluate', '\n' ,results)
 } 
