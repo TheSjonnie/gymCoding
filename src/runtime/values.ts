@@ -1,7 +1,7 @@
 import { Statement } from "../frontend/ast";
 import Environment from "./environment";
 
-export type ValueType = 'null' | 'number'|'boolean' | "object"  | "nativeFunction" | "function";
+export type ValueType = 'null' | 'number'|'boolean' | "object"  | "nativeFunction" | "function" | "undefined";
 
 export interface RuntimeVal {
     type: ValueType;
