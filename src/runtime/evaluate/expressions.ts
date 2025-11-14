@@ -74,7 +74,6 @@ export function evaluate_object_expression (obj: ObjectLiteral, env: Environment
 
 export function evaluate_call_expression (expression: CallExpression, env: Environment): RuntimeVal {
     const args = expression.arguments.map((arg) => evaluate(arg, env))
-    console.log(expression.caller)
     const fn = evaluate(expression.caller , env) ;
     if (fn.type == "nativeFunction"){
         const results = (fn as NativeFunctionValue).call(args, env)
@@ -88,10 +87,13 @@ export function evaluate_call_expression (expression: CallExpression, env: Envir
         }
 
         let result: RuntimeVal = make_Null();
-        console.dir(func,{depth: null})
         for(const statement of func.body){
-            result = evaluate(statement, scope)
-        }   
+            if (statement.kind == "returnStatement"){
+                result = evaluate(statement, scope)
+            } else {
+                evaluate(statement, scope)
+            }
+        }
         return result
     }
     throw "cannot call value that is not a function" + JSON.stringify(fn);

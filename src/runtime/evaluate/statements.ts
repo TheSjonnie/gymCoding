@@ -1,4 +1,4 @@
-import { functionDeclaration, Program, variableDeclaration } from "../../frontend/ast";
+import { Expression, functionDeclaration, Program, returnStatement, Statement, variableDeclaration } from "../../frontend/ast";
 import Environment from "../environment";
 import { evaluate } from "../interpreter";
 import { RuntimeVal, make_Null, FunctionValue } from "../values";
@@ -37,4 +37,8 @@ export function evaluate_function_declaration(
   } as FunctionValue
 
   return env.declareVarible(declaration.name, fn, true)
+}
+
+export function evaluate_return_statement(astNode: returnStatement, env): RuntimeVal{
+  return evaluate(astNode.expression, env)
 }

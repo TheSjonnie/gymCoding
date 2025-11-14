@@ -12,6 +12,7 @@ import {
     CallExpression,
     MemberExpression,
     functionDeclaration,
+    returnStatement,
 } from "./ast";
 import { tokenizer, Token, TokenType } from "./lexer";
 
@@ -37,6 +38,8 @@ export default class Parser {
     }
     public produceAST(srcCode: string): Program {
         this.tokens = tokenizer(srcCode);
+        console.log(this.tokens)
+        
         const program: Program = {
             kind: "Program",
             body: [],
@@ -53,11 +56,21 @@ export default class Parser {
                 return this.parseVariableDeclaration();
             case TokenType.Function:
                 return this.parseFunctionDeclaration()
+            case TokenType.Return:
+                return this.parseReturnStatement();
             default:
                 return this.parseExpression();
         }
     }
-    parseFunctionDeclaration(): Statement {
+    private parseReturnStatement(): Statement {
+        this.eat();
+        let Expr  = this.parseExpression()
+        return {
+            kind: "returnStatement",
+            expression: Expr
+        } as returnStatement
+    }
+    private parseFunctionDeclaration(): Statement {
 
         this.eat(); 
         const name: string = this.expect(TokenType.Identifier, "expected function name following fn keyword").value;

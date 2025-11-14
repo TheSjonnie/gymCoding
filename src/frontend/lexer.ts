@@ -16,12 +16,14 @@ export enum TokenType {
     let,
     const,
     Function,
+    Return,
     EndOfFile,
 }
 const keywords: Record<string, TokenType> = {
     let: TokenType.let,
     const: TokenType.const,
     function: TokenType.Function,
+    return: TokenType.Return,
 };
 export interface Token {
     value: string;
