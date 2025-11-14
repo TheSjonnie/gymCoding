@@ -1,9 +1,9 @@
 const readline = require("readline");
-import Parser from "./frontend/parser";
-import { createGlobalEnvironment } from "./runtime/globals";
-import { evaluate } from "./runtime/interpreter";
+import Parser from "./src/frontend/parser";
+import { createGlobalEnvironment } from "./src/runtime/globals";
+import { evaluate } from "./src/runtime/interpreter";
 import * as fs from 'fs';
-import { make_Null, make_Number,make_Bool, NumberVal } from "./runtime/values";
+import { make_Null, make_Number,make_Bool, NumberVal } from "./src/runtime/values";
 
 
 function startInterpreter() {

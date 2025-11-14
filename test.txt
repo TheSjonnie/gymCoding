@@ -1,5 +1,6 @@
 function add(x, y){
     let result = x + y
+    let a = 45
 }
 
 let z = add(5, 5)

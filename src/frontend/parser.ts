@@ -1,4 +1,3 @@
-import { error } from "console";
 import {
     Statement,
     Program,
@@ -15,8 +14,6 @@ import {
     functionDeclaration,
 } from "./ast";
 import { tokenizer, Token, TokenType } from "./lexer";
-import { BlobOptions } from "buffer";
-import { exit } from "process";
 
 export default class Parser {
     private tokens: Token[] = [];

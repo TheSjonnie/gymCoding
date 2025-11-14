@@ -6,7 +6,9 @@ import { RuntimeVal, make_Null, FunctionValue } from "../values";
 
 export function evaluate_program(program: Program, env: Environment): RuntimeVal {
     let lastEvalutad: RuntimeVal = make_Null();
+    console.log(program.body)
     for (const statement of program.body) {
+        console.log(statement);
         lastEvalutad = evaluate(statement, env);
     }
     return lastEvalutad;

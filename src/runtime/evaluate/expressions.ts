@@ -1,4 +1,4 @@
-import { json } from "stream/consumers";
+
 import { AssignmentExpression, BinaryExpression, CallExpression, Identifier, ObjectLiteral } from "../../frontend/ast";
 import Environment from "../environment";
 import { evaluate } from "../interpreter";
@@ -10,12 +10,7 @@ export function evaluate_numeric_expression(
     operator: string
 ): NumberVal {
     let results = 0;
-    console.log({
-        operator: operator,
-        leftHandSide: leftHandSide,
-        rightHandSide: rightHandSide
 
-    })
     switch (operator) {
         case "+":
             results = leftHandSide.value + rightHandSide.value;
@@ -79,6 +74,7 @@ export function evaluate_object_expression (obj: ObjectLiteral, env: Environment
 
 export function evaluate_call_expression (expression: CallExpression, env: Environment): RuntimeVal {
     const args = expression.arguments.map((arg) => evaluate(arg, env))
+    console.log(expression.caller)
     const fn = evaluate(expression.caller , env) ;
     if (fn.type == "nativeFunction"){
         const results = (fn as NativeFunctionValue).call(args, env)
@@ -92,6 +88,7 @@ export function evaluate_call_expression (expression: CallExpression, env: Envir
         }
 
         let result: RuntimeVal = make_Null();
+        console.dir(func,{depth: null})
         for(const statement of func.body){
             result = evaluate(statement, scope)
         }   
