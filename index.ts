@@ -1,5 +1,4 @@
 const readline = require("readline");
-import { parse } from "path";
 import Parser from "./frontend/parser";
 import Environment, { createGlobalEnvironment } from "./runtime/environment";
 import { evaluate } from "./runtime/interpreter";

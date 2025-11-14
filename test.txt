@@ -1,0 +1,6 @@
+function add(x, y){
+    let result = x + y
+}
+
+let z = add(5, 5)
+print(z)

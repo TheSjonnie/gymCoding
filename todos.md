@@ -3,7 +3,6 @@
 ### bugs
 
 ### need to fix
-    1. dat je niet bij elke varDeclation een ; moet gebruiken
     2. dat je een return statment nodig hebt om een waarde in een fn te returnen
 
 ### plans
