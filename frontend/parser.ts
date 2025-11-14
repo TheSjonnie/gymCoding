@@ -114,7 +114,7 @@ export default class Parser {
             identifier,
             constant: isConstant,
         } as variableDeclaration;
-        this.expect(TokenType.Semicolin, "valiable declaration statment must end with semicolon.");
+        // this.expect(TokenType.Semicolin, "valiable declaration statment must end with semicolon.");
         return declaration;
     }
     private parseExpression(): Expression {
