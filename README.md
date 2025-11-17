@@ -14,8 +14,8 @@ Let op: dit is een hobby-/leerproject. Veel onderdelen zijn nog in ontwikkeling.
 
 - Basis lexer & parser: in ontwikkeling
 - Variabelen en basistypen: in ontwikkeling
-- Lussen en conditionals: in ontwikkeling
-- Functies: nog niet geïmplementeerd
+- loops: nog niet geimplementeerd
+- Functies: werkend
 - Foutafhandeling: nog niet geïmplementeerd
 
 ## Snelstart
